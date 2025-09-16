@@ -10,8 +10,10 @@ public class PlayerScript : MonoBehaviour
     public float jumpHeight = 5;
     private Rigidbody2D rb2d;
     private float _movement;
-    private int playerMode = 1;
+    private float playerMode = 1;
     private SpriteRenderer rb2dSpriteRenderer;
+    private float jumpModifier;
+    private float speedModifier;
 
     void Start()
     {
@@ -31,13 +33,15 @@ public class PlayerScript : MonoBehaviour
     {
         if (ctx.ReadValue<float>() == 1)
         {
-            rb2d.linearVelocityY = jumpHeight * (4 - playerMode);
+            jumpModifier = (4 - playerMode) / 4 * 3;
+            rb2d.linearVelocityY = jumpHeight * Mathf.Clamp(jumpModifier, 1, 3);
         }
     }
 
     public void Move(InputAction.CallbackContext ctx)
     {
-        _movement = ctx.ReadValue<Vector2>().x * speed * playerMode;
+        speedModifier = (playerMode) / 3 * 2;
+        _movement = ctx.ReadValue<Vector2>().x * speed * Mathf.Clamp(speedModifier, 1, 3);
     }
 
     public void Swap(InputAction.CallbackContext ctx)
