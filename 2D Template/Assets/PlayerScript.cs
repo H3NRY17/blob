@@ -14,6 +14,7 @@ public class PlayerScript : MonoBehaviour
     private SpriteRenderer rb2dSpriteRenderer;
     private float jumpModifier;
     private float speedModifier;
+    private bool swapping;
 
     void Start()
     {
@@ -25,7 +26,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb2d.linearVelocityX = _movement;
+        rb2d.linearVelocityX = _movement * Mathf.Clamp(speedModifier, 1, 3);
     }
 
 
@@ -40,8 +41,9 @@ public class PlayerScript : MonoBehaviour
 
     public void Move(InputAction.CallbackContext ctx)
     {
-        speedModifier = (playerMode) / 3 * 2;
-        _movement = ctx.ReadValue<Vector2>().x * speed * Mathf.Clamp(speedModifier, 1, 3);
+   
+        _movement = ctx.ReadValue<Vector2>().x * speed;
+        
     }
 
     public void Swap(InputAction.CallbackContext ctx)
@@ -50,6 +52,7 @@ public class PlayerScript : MonoBehaviour
         {
             return;
         }
+       
         switch (playerMode)
         { 
 
@@ -69,5 +72,6 @@ public class PlayerScript : MonoBehaviour
                 rb2dSpriteRenderer.color = Color.red;
                 break;
         }
+        speedModifier = (playerMode) / 3 * 2;
     }
 }
