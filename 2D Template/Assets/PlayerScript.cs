@@ -42,7 +42,10 @@ public class PlayerScript : MonoBehaviour
 
     public void Swap(InputAction.CallbackContext ctx)
     {
-
+        if (!ctx.performed)
+        {
+            return;
+        }
         switch (playerMode)
         { 
 
