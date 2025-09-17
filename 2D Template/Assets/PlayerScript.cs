@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public class PlayerScript : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
+    
     public float speed = 5;
     public float jumpHeight = 5;
     private Rigidbody2D rb2d;
@@ -15,6 +17,7 @@ public class PlayerScript : MonoBehaviour
     private float jumpModifier;
     private float speedModifier;
     private bool swapping;
+    private bool canJump;
 
     void Start()
     {
@@ -32,7 +35,7 @@ public class PlayerScript : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext ctx)
     {
-        if (ctx.ReadValue<float>() == 1)
+        if (ctx.ReadValue<float>() == 1 && canJump)
         {
             jumpModifier = (4 - playerMode) / 4 * 3;
             rb2d.linearVelocityY = jumpHeight * Mathf.Clamp(jumpModifier, 1, 3);
@@ -44,6 +47,22 @@ public class PlayerScript : MonoBehaviour
    
         _movement = ctx.ReadValue<Vector2>().x * speed;
         
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "Tilemap")
+        {
+            canJump = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "Tilemap")
+        {
+            canJump = false;
+        }
     }
 
     public void Swap(InputAction.CallbackContext ctx)
