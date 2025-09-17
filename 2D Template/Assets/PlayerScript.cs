@@ -72,6 +72,11 @@ public class PlayerScript : MonoBehaviour
             return;
         }
        
+        if(!canJump)
+        {
+            return;
+        }
+
         switch (playerMode)
         { 
 
