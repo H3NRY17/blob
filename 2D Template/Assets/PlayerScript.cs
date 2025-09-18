@@ -18,6 +18,7 @@ public class PlayerScript : MonoBehaviour
     private float speedModifier;
     private bool swapping;
     private bool canJump;
+    private float playerHealth = 10;
 
     void Start()
     {
@@ -30,6 +31,9 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         rb2d.linearVelocityX = _movement * Mathf.Clamp(speedModifier, 1, 3);
+
+
+
         if (transform.position.y < -12)
         {
             transform.position = new Vector3(0, 0, 0);
@@ -101,5 +105,22 @@ public class PlayerScript : MonoBehaviour
                 break;
         }
         speedModifier = (playerMode) / 3 * 2;
+    }
+
+
+    public void dealPlayerDamage(String cause, float amount)
+    {
+        playerHealth -= amount;
+        if (cause == "spike")
+        {
+            if (rb2d.linearVelocityX > 0)
+            {
+                rb2d.linearVelocityX = -25;
+            }
+            else
+            {
+                rb2d.linearVelocityX = +25;
+            }
+        }
     }
 }
