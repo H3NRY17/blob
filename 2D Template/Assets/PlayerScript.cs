@@ -30,6 +30,10 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         rb2d.linearVelocityX = _movement * Mathf.Clamp(speedModifier, 1, 3);
+        if (transform.position.y < -12)
+        {
+            transform.position = new Vector3(0, 0, 0);
+        }
     }
 
 
