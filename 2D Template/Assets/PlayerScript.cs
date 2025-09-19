@@ -145,7 +145,7 @@ public class PlayerScript : MonoBehaviour
                 rb2d.linearVelocityY += 10;
 
             }
-            Debug.Log(rb2d.linearVelocityX);
+            
         }
     }
 }
