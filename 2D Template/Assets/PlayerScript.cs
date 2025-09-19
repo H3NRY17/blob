@@ -19,6 +19,9 @@ public class PlayerScript : MonoBehaviour
     private bool swapping;
     private bool canJump;
     private float playerHealth = 10;
+    private bool kbFrame = false;
+
+    private float time = 0;
 
     void Start()
     {
@@ -30,7 +33,18 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb2d.linearVelocityX = _movement * Mathf.Clamp(speedModifier, 1, 3);
+
+        if (time > .25 || !kbFrame)
+        {
+            rb2d.linearVelocityX = _movement * Mathf.Clamp(speedModifier, 1, 3);
+            kbFrame = false;
+            time = 0;
+        }
+        if (kbFrame)
+        {
+            time += 1 * Time.deltaTime;
+        }
+        
 
 
 
@@ -113,14 +127,25 @@ public class PlayerScript : MonoBehaviour
         playerHealth -= amount;
         if (cause == "spike")
         {
+            Debug.Log(rb2d.linearVelocityX);
             if (rb2d.linearVelocityX > 0)
             {
-                rb2d.linearVelocityX = -25;
+                kbFrame = true;
+                rb2d.linearVelocityX -= 10;
+
+            }
+            else if (rb2d.linearVelocityX < 0)
+            {
+                kbFrame = true;
+
+                rb2d.linearVelocityX += 10;
             }
             else
             {
-                rb2d.linearVelocityX = +25;
+                rb2d.linearVelocityY += 10;
+
             }
+            Debug.Log(rb2d.linearVelocityX);
         }
     }
 }
