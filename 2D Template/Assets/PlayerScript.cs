@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class PlayerScript : MonoBehaviour
     private bool canJump;
     private float playerHealth = 10;
     private bool kbFrame = false;
+    public string endCause = "N.A"; 
 
     private float time = 0;
 
@@ -147,5 +149,19 @@ public class PlayerScript : MonoBehaviour
             }
             
         }
+
+        if (playerHealth <= 0)
+        {
+            swapCurrentScene("End", cause);
+        }
     }
+
+
+    public void swapCurrentScene(String name, String cause)
+    {
+        endCause = cause;
+        SceneManager.LoadScene(name);
+    }
+
+
 }
