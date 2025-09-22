@@ -21,7 +21,8 @@ public class PlayerScript : MonoBehaviour
     private bool canJump;
     private float playerHealth = 10;
     private bool kbFrame = false;
-    public string endCause = "N.A"; 
+    public static string endCause = "NA"; 
+
 
     private float time = 0;
 
@@ -52,6 +53,7 @@ public class PlayerScript : MonoBehaviour
 
         if (transform.position.y < -12)
         {
+            dealPlayerDamage("void", 5);
             transform.position = new Vector3(0, 0, 0);
         }
     }
