@@ -27,6 +27,10 @@ public class EndUIScript : MonoBehaviour
         {
             centerText.text = "You Lost\n You died to the " + finalCause;
         }
+        else
+        {
+            centerText.text = "You Lost\nYou ran out of time";
+        }
     }
 
 }  
