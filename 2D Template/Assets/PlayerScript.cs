@@ -8,7 +8,7 @@ public class PlayerScript : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    
+
     public float speed = 5;
     public float jumpHeight = 5;
     private Rigidbody2D rb2d;
@@ -21,10 +21,12 @@ public class PlayerScript : MonoBehaviour
     private bool canJump;
     private float playerHealth = 10;
     private bool kbFrame = false;
-    public static string endCause = "NA"; 
-
+    public static string endCause = "NA";
+    public bool lastDirection;
 
     private float time = 0;
+
+    private bool hasBounced = false;
 
     void Start()
     {
@@ -37,24 +39,35 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
 
-        if (time > .25 || !kbFrame)
+        if (rb2d.linearVelocityX > 0)
         {
-            rb2d.linearVelocityX = _movement * Mathf.Clamp(speedModifier, 1, 3);
-            kbFrame = false;
-            time = 0;
+            lastDirection = true;
         }
+        else if (rb2d.linearVelocityX < 0)
+        {
+            lastDirection = false;
+        }
+
+
+        if (time > .25 || !kbFrame)
+            {
+                rb2d.linearVelocityX = _movement * Mathf.Clamp(speedModifier, 1, 3);
+                kbFrame = false;
+                time = 0;
+            }
         if (kbFrame)
         {
             time += 1 * Time.deltaTime;
         }
-        
+
 
 
 
         if (transform.position.y < -12)
         {
             dealPlayerDamage("void", 5);
-            transform.position = new Vector3(0, 0, 0);
+            transform.position = new Vector3(0, -7, 0);
+            rb2d.linearVelocity = new Vector2(0, 0);
         }
     }
 
@@ -70,9 +83,9 @@ public class PlayerScript : MonoBehaviour
 
     public void Move(InputAction.CallbackContext ctx)
     {
-   
+
         _movement = ctx.ReadValue<Vector2>().x * speed;
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -80,6 +93,7 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.name == "Tilemap")
         {
             canJump = true;
+            hasBounced = false;
         }
     }
 
@@ -97,14 +111,14 @@ public class PlayerScript : MonoBehaviour
         {
             return;
         }
-       
-        if(!canJump)
+
+        if (!canJump)
         {
             return;
         }
 
         switch (playerMode)
-        { 
+        {
 
             case 1:
                 rb2dSpriteRenderer.color = Color.yellow;
@@ -131,25 +145,24 @@ public class PlayerScript : MonoBehaviour
         playerHealth -= amount;
         if (cause == "spike")
         {
-            Debug.Log(rb2d.linearVelocityX);
             if (rb2d.linearVelocityX > 0)
             {
                 kbFrame = true;
-                rb2d.linearVelocityX -= 10;
+                rb2d.linearVelocityX -= 10 * Mathf.Clamp(speedModifier, 1, 3);
 
             }
             else if (rb2d.linearVelocityX < 0)
             {
                 kbFrame = true;
 
-                rb2d.linearVelocityX += 10;
+                rb2d.linearVelocityX += 10 * Mathf.Clamp(speedModifier, 1, 3);
             }
             else
             {
-                rb2d.linearVelocityY += 10;
+                rb2d.linearVelocityY += 17;
 
             }
-            
+
         }
 
         if (playerHealth <= 0)
@@ -165,5 +178,24 @@ public class PlayerScript : MonoBehaviour
         SceneManager.LoadScene(name);
     }
 
+    public void bouncePlayer()
+    {
+        if (lastDirection)
+        {
+            kbFrame = true;
+            rb2d.linearVelocityX -= 10 * Mathf.Clamp(speedModifier, 1, 3);
 
+        }
+        else if (!lastDirection)
+        {
+            kbFrame = true;
+            rb2d.linearVelocityX += 10 * Mathf.Clamp(speedModifier, 1, 3);
+        }
+
+        if (!canJump && !hasBounced)
+        {
+            hasBounced = true;
+            rb2d.linearVelocityY += 5;
+        }
+    }
 }
